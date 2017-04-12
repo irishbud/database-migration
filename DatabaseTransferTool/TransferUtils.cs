@@ -145,6 +145,7 @@ namespace DatabaseTransferTool {
             Status.Step = 1;
             Status.Value = 0;
 
+            DisableAllConstraints(destinationConnectionString);
             Logger.Log("Creating schema");
 
             // process each table
@@ -330,6 +331,7 @@ namespace DatabaseTransferTool {
 
 
             }
+            EnableAllConstraints(destinationConnectionString);
 
             CheckState();
 
