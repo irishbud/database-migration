@@ -145,6 +145,7 @@ namespace DatabaseTransferTool {
             Status.Step = 1;
             Status.Value = 0;
 
+            DisableAllConstraints(destinationConnectionString);
             Logger.Log("Creating schema");
 
             // process each table
@@ -330,6 +331,7 @@ namespace DatabaseTransferTool {
 
 
             }
+            EnableAllConstraints(destinationConnectionString);
 
             CheckState();
 
@@ -350,6 +352,16 @@ namespace DatabaseTransferTool {
             if (IsErrorState) {
                 throw new Exception("Error state detected, halting");
             }
+        }
+
+        private void DisableAllConstraints(string connectionString)
+        {
+            ExecuteCommand(connectionString, "EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'");
+        }
+
+        private void EnableAllConstraints(string connectionString)
+        {
+            ExecuteCommand(connectionString, "EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'");
         }
 
         /// <summary>
