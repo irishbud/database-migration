@@ -352,6 +352,16 @@ namespace DatabaseTransferTool {
             }
         }
 
+        private void DisableAllConstraints(string connectionString)
+        {
+            ExecuteCommand(connectionString, "EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'");
+        }
+
+        private void EnableAllConstraints(string connectionString)
+        {
+            ExecuteCommand(connectionString, "EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'");
+        }
+
         /// <summary>
         /// Delete all relevant data from a table
         /// </summary>
