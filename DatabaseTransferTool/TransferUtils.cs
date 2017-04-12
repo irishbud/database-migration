@@ -457,7 +457,7 @@ namespace DatabaseTransferTool {
                 for (int i = 0; i < effectiveColumns.Count(); ++i)
                 {
 
-                    effectiveColumns[i] = columns[i].EffectiveSourceColumnName + " as " + columns[i].DestinationColumnName;
+                    effectiveColumns[i] = columns[i].EffectiveSourceColumnName + " as [" + columns[i].DestinationColumnName + "]";
 
                 }
                 results = string.Join(", ", effectiveColumns);
