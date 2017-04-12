@@ -376,9 +376,9 @@ namespace DatabaseTransferTool {
             Logger.Log("Clearing destination table " + table + (string.IsNullOrWhiteSpace(customFilter) ? "" : (" with filter: " + customFilter)));
             
             // drop the data from the table
-            ExecuteCommand(connectionString, "alter table " + table + " nocheck constraint all; delete from " + table + 
+            ExecuteCommand(connectionString, "delete from " + table + 
                 (string.IsNullOrWhiteSpace(customFilter) ? "" : (customFilter.TrimStart().StartsWith("where ") ? (" " + customFilter) : (" where " + customFilter))) + 
-                "; alter table " + table + " check constraint all");
+                "");
         }
 
         /// <summary>
