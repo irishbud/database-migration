@@ -376,9 +376,9 @@ namespace DatabaseTransferTool {
             Logger.Log("Clearing destination table " + table + (string.IsNullOrWhiteSpace(customFilter) ? "" : (" with filter: " + customFilter)));
             
             // drop the data from the table
-            ExecuteCommand(connectionString, "alter table " + table + " nocheck constraint all; delete from " + table + 
+            ExecuteCommand(connectionString, "delete from " + table + 
                 (string.IsNullOrWhiteSpace(customFilter) ? "" : (customFilter.TrimStart().StartsWith("where ") ? (" " + customFilter) : (" where " + customFilter))) + 
-                "; alter table " + table + " check constraint all");
+                "");
         }
 
         /// <summary>
@@ -478,17 +478,29 @@ namespace DatabaseTransferTool {
 
             List<string> indices = new List<string>();
 
-
             for (int i = 1; i <= columns.Count; ++i) {
 
                 if (!columns[i - 1].IsVirtualSelectColumn)
                 {
-                    indices.Add(useNames ? ("\"" + columns[i - 1].SourceColumnName + "\"") : i + " asc");
+                    if (IncludeColumnForOrdering(columns[i - 1]))
+                    {
+                        indices.Add(useNames ? ("\"" + columns[i - 1].SourceColumnName + "\"") : i + " asc");
+                    }
                 }
             }
 
             return string.Join(", ", indices);
 
+        }
+
+        private bool IncludeColumnForOrdering(Column checkColumn)
+        {
+            var lstExcludeColumnTypes = new List<string>();
+            lstExcludeColumnTypes.Add("text");
+            lstExcludeColumnTypes.Add("ntext");
+            lstExcludeColumnTypes.Add("image");
+
+            return !lstExcludeColumnTypes.Contains(checkColumn.DataType.ToLower());
         }
 
         /// <summary>
