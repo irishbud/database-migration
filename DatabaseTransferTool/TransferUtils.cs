@@ -478,17 +478,29 @@ namespace DatabaseTransferTool {
 
             List<string> indices = new List<string>();
 
-
             for (int i = 1; i <= columns.Count; ++i) {
 
                 if (!columns[i - 1].IsVirtualSelectColumn)
                 {
-                    indices.Add(useNames ? ("\"" + columns[i - 1].SourceColumnName + "\"") : i + " asc");
+                    if (IncludeColumnForOrdering(columns[i - 1]))
+                    {
+                        indices.Add(useNames ? ("\"" + columns[i - 1].SourceColumnName + "\"") : i + " asc");
+                    }
                 }
             }
 
             return string.Join(", ", indices);
 
+        }
+
+        private bool IncludeColumnForOrdering(Column checkColumn)
+        {
+            var lstExcludeColumnTypes = new List<string>();
+            lstExcludeColumnTypes.Add("text");
+            lstExcludeColumnTypes.Add("ntext");
+            lstExcludeColumnTypes.Add("image");
+
+            return !lstExcludeColumnTypes.Contains(checkColumn.DataType.ToLower());
         }
 
         /// <summary>
