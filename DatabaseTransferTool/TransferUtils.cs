@@ -681,6 +681,8 @@ namespace DatabaseTransferTool {
         /// <param name="table">the destination table</param>
         private void PerformBulkInsert(string destinationConnectionString, SqlDataReader rows, int batchSize, Table table) {
 
+            Logger.Log(string.Format("Perform Bulk Insert For '{0}'",table.Name));
+
             // the SqlBulkCopy utility makes this operation significantly faster than manually managing
             // the copy
             using (SqlBulkCopy copier = new SqlBulkCopy(destinationConnectionString,
@@ -706,6 +708,7 @@ namespace DatabaseTransferTool {
                 copier.Close();
 
             }
+            Logger.Log(string.Format("Bulk Insert Completed For '{0}'", table.Name));
             
 
         }
